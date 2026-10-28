@@ -40,17 +40,21 @@ int getChoice(int min, int max) {
     }
 }
 
-// Display main menu
+ // Display main menu
 void showMenu() {
-    cout << "\n=== Personal Expense Tracker ===\n";
-    cout << "1. Select type of expense\n";
-    cout << "2. Add an expense\n";
-    cout << "3. View all expenses\n";
-    cout << "4. Search expenses\n";
-    cout << "5. Update an expense\n";
-    cout << "6. Delete an expense\n";
-    cout << "7. Show spending summary\n";
+    cout << "\n====================================\n";
+    cout << "     PERSONAL EXPENSE TRACKER\n";
+    cout << "====================================\n";
+    cout << "1. Select Type of Expense\n";
+    cout << "2. Add an Expense\n";
+    cout << "3. View All Expenses\n";
+    cout << "4. Update an Expense\n";
+    cout << "5. Delete an Expense\n";
+    cout << "6. Show Spending Summary\n";
+    cout << "7. About the System\n";
     cout << "8. Exit\n";
+    cout << "====================================\n";
+    cout << "Enter your choice: ";
 }
 
 // Select expense type
@@ -96,7 +100,8 @@ void showExitScreen() {
     cout << "\t      T H A N K  Y O U   F O R   U S I N G!!     \n\n";
 }
 
-// Main program
+
+ // Main program
 int main() {
     bool running = true;
 
@@ -119,31 +124,31 @@ int main() {
 
             case 3:
                 clearConsole();
-                cout << "\nView Expenses will be implemented next.\n";
+                cout << "\nView All Expenses will be implemented next.\n";
                 pauseConsole();
                 break;
 
             case 4:
                 clearConsole();
-                cout << "\nSearch Expenses will be implemented next.\n";
+                cout << "\nUpdate Expense will be implemented next.\n";
                 pauseConsole();
                 break;
 
             case 5:
                 clearConsole();
-                cout << "\nUpdate Expense will be implemented next.\n";
+                cout << "\nDelete Expense will be implemented next.\n";
                 pauseConsole();
                 break;
 
             case 6:
                 clearConsole();
-                cout << "\nDelete Expense will be implemented next.\n";
+                cout << "\nSpending Summary will be implemented next.\n";
                 pauseConsole();
                 break;
 
             case 7:
                 clearConsole();
-                cout << "\nSpending Summary will be implemented next.\n";
+                cout << "\nAbout the System will be implemented next.\n";
                 pauseConsole();
                 break;
 
