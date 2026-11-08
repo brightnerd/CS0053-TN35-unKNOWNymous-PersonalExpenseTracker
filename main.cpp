@@ -1,8 +1,17 @@
 #include <iostream>
 #include <limits>
 #include <cstdlib>
+#include <iomanip>
 
 using namespace std;
+
+// Budget allocation
+struct Budget {
+    double monthlyBudget;
+    double needsBudget;
+    double wantsBudget;
+    double savingsBudget;
+};
 
 // Clear console
 void clearConsole() {
