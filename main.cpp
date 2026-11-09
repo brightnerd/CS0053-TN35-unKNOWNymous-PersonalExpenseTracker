@@ -13,6 +13,16 @@ struct Budget {
     double savingsBudget;
 };
 
+// 50/30/20 budget allocation
+Budget calculateBudget(double monthlyIncome) {
+    Budget budget;
+    budget.monthlyBudget = monthlyIncome;
+    budget.needsBudget = monthlyIncome * 0.5; // 50% for needs
+    budget.wantsBudget = monthlyIncome * 0.3; // 30% for wants
+    budget.savingsBudget = monthlyIncome * 0.2; // 20% for savings
+    return budget;
+}
+
 // Clear console
 void clearConsole() {
 #ifdef _WIN32
