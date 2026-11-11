@@ -8,18 +8,45 @@ using namespace std;
 // Budget allocation
 struct Budget {
     double monthlyBudget;
+
     double needsBudget;
     double wantsBudget;
     double savingsBudget;
+
+    // Spending and contributions
+    double needsSpent;
+    double wantsSpent;
+    double savingsContributed;
+
+    // remaining budget
+    double needsRemaining;
+    double wantsRemaining;
+    double savingsRemaining;
+
+    // Total expenses
+    double totalExpenses;
 };
 
 // 50/30/20 budget allocation
 Budget calculateBudget(double monthlyIncome) {
     Budget budget;
+
     budget.monthlyBudget = monthlyIncome;
+
     budget.needsBudget = monthlyIncome * 0.5; // 50% for needs
     budget.wantsBudget = monthlyIncome * 0.3; // 30% for wants
     budget.savingsBudget = monthlyIncome * 0.2; // 20% for savings
+    
+    budget.needsSpent = 0.0;
+    budget.wantsSpent = 0.0;
+    budget.savingsContributed = 0.0;
+
+    budget.needsRemaining = budget.needsBudget;
+    budget.wantsRemaining = budget.wantsBudget;
+    budget.savingsRemaining = budget.savingsBudget;
+
+    budget.totalExpenses = 0.0;
+    
     return budget;
 }
 
