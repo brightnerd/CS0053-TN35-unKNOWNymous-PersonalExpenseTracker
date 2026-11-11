@@ -50,6 +50,19 @@ Budget calculateBudget(double monthlyIncome) {
     return budget;
 }
 
+void updateBudgetSpending(Budget& budget, double needsSpent, double wantsSpent, double savingsContributed) {
+    
+    budget.needsSpent += needsSpent;
+    budget.wantsSpent += wantsSpent;
+    budget.savingsContributed += savingsContributed;
+
+    budget.needsRemaining = budget.needsBudget - budget.needsSpent;
+    budget.wantsRemaining = budget.wantsBudget - budget.wantsSpent;
+    budget.savingsRemaining = budget.savingsBudget - budget.savingsContributed;
+
+    budget.totalExpenses = budget.needsSpent + budget.wantsSpent;
+}
+
 // Clear console
 void clearConsole() {
 #ifdef _WIN32
