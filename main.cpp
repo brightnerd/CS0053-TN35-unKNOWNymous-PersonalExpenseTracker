@@ -1,7 +1,12 @@
 #include <iostream>
 #include <limits>
 #include <cstdlib>
+#include <string>
 #include <iomanip>
+#include <fstream>
+#include <vector>
+
+#include "expense.h"
 
 using namespace std;
 
@@ -63,6 +68,42 @@ void updateBudgetSpending(Budget& budget, double needsSpent, double wantsSpent, 
     budget.totalExpenses = budget.needsSpent + budget.wantsSpent;
 }
 
+// Quote CSV text and escape embedded quotation marks.
+string quoteCsvField(const string& value) {
+    string quoted = "\"";
+    for (char character : value) {
+        if (character == '"') {
+            quoted += '"';
+        }
+        quoted += character;
+    }
+    quoted += '"';
+    return quoted;
+}
+
+// Save the current records. Call after successful add/update/delete operations.
+bool saveExpenses(const vector<Expense>& expenses, const string& filename) {
+    ofstream file(filename, ios::binary | ios::trunc);
+    if (!file.is_open()) {
+        return false;
+    }
+
+    file << "id,description,amount,date,category,expenseType\n";
+    file << setprecision(numeric_limits<double>::max_digits10);
+
+    for (const Expense& expense : expenses) {
+        file << expense.id << ','
+             << quoteCsvField(expense.description) << ','
+             << expense.amount << ','
+             << quoteCsvField(expense.date) << ','
+             << static_cast<int>(expense.category) << ','
+             << static_cast<int>(expense.expenseType) << '\n';
+    }
+
+    file.close();
+    return !file.fail();
+}
+
 // Clear console
 void clearConsole() {
 #ifdef _WIN32
@@ -117,7 +158,7 @@ void showMenu() {
 }
 
 // Select expense type
-void selectExpense() {
+void selectExpense(ExpenseType& selectedExpenseType) {
     clearConsole();
 
     cout << "\n=== Select Expense Type ===\n";
@@ -125,16 +166,16 @@ void selectExpense() {
     cout << "2. Weekly Expenses\n";
     cout << "3. Daily Expenses\n";
 
-    int expenseType = getChoice(1, 3);
+    selectedExpenseType = static_cast<ExpenseType>(getChoice(1, 3));
 
-    switch (expenseType) {
-        case 1:
+    switch (selectedExpenseType) {
+        case ExpenseType::Monthly:
             cout << "\nYou selected Monthly Expenses.\n";
             break;
-        case 2:
+        case ExpenseType::Weekly:
             cout << "\nYou selected Weekly Expenses.\n";
             break;
-        case 3:
+        case ExpenseType::Daily:
             cout << "\nYou selected Daily Expenses.\n";
             break;
     }
@@ -162,6 +203,9 @@ void showExitScreen() {
 
  // Main program
 int main() {
+    // Pass this collection by reference to the feature functions.
+    vector<Expense> expenses;
+    ExpenseType selectedExpenseType = ExpenseType::Monthly;
     bool running = true;
 
     while (running) {
@@ -172,7 +216,7 @@ int main() {
 
         switch (choice) {
             case 1:
-                selectExpense();
+                selectExpense(selectedExpenseType);
                 break;
 
             case 2:
