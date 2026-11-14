@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <fstream>
 #include <vector>
+#include <map>
 
 #include "expense.h"
 
@@ -185,8 +186,70 @@ void pauseConsole() {
     getline(cin, line);
 }
 
+// Sets or updates income for the selected month
+void setMonthlyIncome(map<string, double>& monthlyIncomes) {
+
+    string yearMonth;
+
+    cout << "\nEnter the month (YYYY-MM): ";
+    getline(cin, yearMonth);
+
+    // Validate month format
+    bool validMonth = yearMonth.size() == 7 &&
+                      yearMonth[4] == '-';
+
+    if (validMonth) {
+        for (int i = 0; i < 7; i++) {
+            if (i != 4 && (yearMonth[i] < '0' ||
+                           yearMonth[i] > '9')) {
+                validMonth = false;
+                break;
+            }
+        }
+    }
+
+    if (validMonth) {
+        int month = stoi(yearMonth.substr(5, 2));
+
+        if (month < 1 || month > 12) {
+            validMonth = false;
+        }
+    }
+
+    // Stop if the month is invalid
+    if (!validMonth) {
+        cout << "Invalid month. Use YYYY-MM format.\n";
+        return;
+    }
+
+    double income;
+
+    cout << "Enter monthly income: PHP ";
+    
+    if (!(cin >> income) || income <= 0) {
+        cout << "Invalid income. Please enter a positive number.\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    monthlyIncomes[yearMonth] = income;
+
+    cout << "Monthly income for " << yearMonth 
+         << " has been saved: PHP " 
+         << fixed << setprecision(2) << income << "\n";
+
+    cout.unsetf(ios::floatfield);
+    cout << setprecision(6);
+}
+
 // Handles the monthly budget summary menu
-void showBudgetSummaryMenu(const vector<Expense>& expenses) {
+void showBudgetSummaryMenu(
+    const vector<Expense>& expenses,
+    const map<string, double>& monthlyIncomes
+) {
     string yearMonth;
 
     while (true) {
@@ -194,7 +257,7 @@ void showBudgetSummaryMenu(const vector<Expense>& expenses) {
         getline(cin, yearMonth);
 
         bool validMonth = yearMonth.size() == 7 &&
-                          yearMonth[4] == '-'; 
+                          yearMonth[4] == '-';
 
         if (validMonth) {
             for (int i = 0; i < 7; i++) {
@@ -217,24 +280,20 @@ void showBudgetSummaryMenu(const vector<Expense>& expenses) {
         cout << "Invalid month. Use YYYY-MM format.\n";
     }
 
-    // Get monthly income
-    double monthlyIncome;
+    // Retrieve the income saved for the selected month
+    auto incomeRecord = monthlyIncomes.find(yearMonth);
 
-    while (true) {
-        cout << "Enter monthly income: PHP ";
-
-        if (cin >> monthlyIncome && monthlyIncome > 0) {
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            break;
-        }
-
-        cout << "Invalid income. Enter a positive amount.\n";
-
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    if (incomeRecord == monthlyIncomes.end()) {
+        cout << "\nNo monthly income has been set for "
+             << yearMonth << ".\n";
+        cout << "Please set the monthly income first.\n";
+        pauseConsole();
+        return;
     }
 
-    // Calculate and Displays budget summary
+    double monthlyIncome = incomeRecord->second;
+
+    // Calculate and display budget summary
     Budget budget = calculateBudget(monthlyIncome);
 
     updateBudgetSpending(budget, expenses, yearMonth);
@@ -329,6 +388,7 @@ void showExitScreen() {
 int main() {
     // Pass this collection by reference to the feature functions.
     vector<Expense> expenses;
+    map<string, double> monthlyIncomes;
     ExpenseType selectedExpenseType = ExpenseType::Monthly;
     bool running = true;
 
@@ -369,7 +429,7 @@ int main() {
 
             case 6:
                 clearConsole();
-                showBudgetSummaryMenu(expenses);
+                showBudgetSummaryMenu(expenses, monthlyIncomes);
                 break;
 
             case 7:
