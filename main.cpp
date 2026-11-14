@@ -103,11 +103,11 @@ void displayBudgetSummary(const Budget& budget, const string& yearMonth) {
     cout << fixed << setprecision(2);
 
     cout << "\n========================================\n";
-    cout << "     MONTHLY BUDGET SUMMARY\n";
+    cout << "        SPENDING SUMMARY\n";
     cout << "========================================\n";
 
     cout << "Month: " << yearMonth << "\n";
-    cout << "Total Monthly Budget: PHP" << budget.monthlyBudget << "\n";
+    cout << "Monthly Income:       PHP " << budget.monthlyBudget << "\n";
 
     cout << "\n--- Budget Allocation ---\n";
     cout << "Needs Budget (50%):   PHP " << budget.needsBudget << "\n";
@@ -183,6 +183,65 @@ void pauseConsole() {
     cout << "\nPress Enter to continue...";
     string line;
     getline(cin, line);
+}
+
+// Handles the monthly budget summary menu
+void showBudgetSummaryMenu(const vector<Expense>& expenses) {
+    string yearMonth;
+
+    while (true) {
+        cout << "\nEnter the month for the budget summary (YYYY-MM): ";
+        getline(cin, yearMonth);
+
+        bool validMonth = yearMonth.size() == 7 &&
+                          yearMonth[4] == '-'; 
+
+        if (validMonth) {
+            for (int i = 0; i < 7; i++) {
+                if (i != 4 && (yearMonth[i] < '0' ||
+                               yearMonth[i] > '9')) {
+                    validMonth = false;
+                    break;
+                }
+            }
+        }
+
+        if (validMonth) {
+            int month = stoi(yearMonth.substr(5, 2));
+
+            if (month >= 1 && month <= 12) {
+                break;
+            }
+        }
+
+        cout << "Invalid month. Use YYYY-MM format.\n";
+    }
+
+    // Get monthly income
+    double monthlyIncome;
+
+    while (true) {
+        cout << "Enter monthly income: PHP ";
+
+        if (cin >> monthlyIncome && monthlyIncome > 0) {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            break;
+        }
+
+        cout << "Invalid income. Enter a positive amount.\n";
+
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    // Calculate and Displays budget summary
+    Budget budget = calculateBudget(monthlyIncome);
+
+    updateBudgetSpending(budget, expenses, yearMonth);
+
+    displayBudgetSummary(budget, yearMonth);
+
+    pauseConsole();
 }
 
 // Get and validate user choice
@@ -310,8 +369,7 @@ int main() {
 
             case 6:
                 clearConsole();
-                cout << "\nSpending Summary will be implemented next.\n";
-                pauseConsole();
+                showBudgetSummaryMenu(expenses);
                 break;
 
             case 7:
