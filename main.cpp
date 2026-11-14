@@ -1,7 +1,12 @@
 #include <iostream>
 #include <limits>
 #include <cstdlib>
+#include <string>
 #include <iomanip>
+#include <fstream>
+#include <vector>
+
+#include "expense.h"
 
 using namespace std;
 
@@ -50,17 +55,82 @@ Budget calculateBudget(double monthlyIncome) {
     return budget;
 }
 
-void updateBudgetSpending(Budget& budget, double needsSpent, double wantsSpent, double savingsContributed) {
-    
-    budget.needsSpent += needsSpent;
-    budget.wantsSpent += wantsSpent;
-    budget.savingsContributed += savingsContributed;
+void updateBudgetSpending(
+    Budget& budget,
+    const vector<Expense>& expenses,
+    const string& yearMonth
+) {
+    // Reset totals before recalculating
+    budget.needsSpent = 0.0;
+    budget.wantsSpent = 0.0;
+    budget.savingsContributed = 0.0;
+    budget.totalExpenses = 0.0;
 
+    // Check only expenses belonging to the selected month
+    for (const Expense& expense : expenses) {
+        if (expense.date.size() < 7 ||
+            expense.date.compare(0, 7, yearMonth) != 0) {
+            continue;
+        }
+
+        switch (expense.category) {
+            case ExpenseCategory::Needs:
+                budget.needsSpent += expense.amount;
+                break;
+
+            case ExpenseCategory::Wants:
+                budget.wantsSpent += expense.amount;
+                break;
+
+            case ExpenseCategory::Savings:
+                budget.savingsContributed += expense.amount;
+                break;
+        }
+    }
+
+    // Total ordinary expenses exclude savings contributions
+    budget.totalExpenses = budget.needsSpent + budget.wantsSpent;
+
+    // Calculate remaining budget
     budget.needsRemaining = budget.needsBudget - budget.needsSpent;
     budget.wantsRemaining = budget.wantsBudget - budget.wantsSpent;
     budget.savingsRemaining = budget.savingsBudget - budget.savingsContributed;
+}
 
-    budget.totalExpenses = budget.needsSpent + budget.wantsSpent;
+// Quote CSV text and escape embedded quotation marks.
+string quoteCsvField(const string& value) {
+    string quoted = "\"";
+    for (char character : value) {
+        if (character == '"') {
+            quoted += '"';
+        }
+        quoted += character;
+    }
+    quoted += '"';
+    return quoted;
+}
+
+// Save the current records. Call after successful add/update/delete operations.
+bool saveExpenses(const vector<Expense>& expenses, const string& filename) {
+    ofstream file(filename, ios::binary | ios::trunc);
+    if (!file.is_open()) {
+        return false;
+    }
+
+    file << "id,description,amount,date,category,expenseType\n";
+    file << setprecision(numeric_limits<double>::max_digits10);
+
+    for (const Expense& expense : expenses) {
+        file << expense.id << ','
+             << quoteCsvField(expense.description) << ','
+             << expense.amount << ','
+             << quoteCsvField(expense.date) << ','
+             << static_cast<int>(expense.category) << ','
+             << static_cast<int>(expense.expenseType) << '\n';
+    }
+
+    file.close();
+    return !file.fail();
 }
 
 // Clear console
@@ -117,7 +187,7 @@ void showMenu() {
 }
 
 // Select expense type
-void selectExpense() {
+void selectExpense(ExpenseType& selectedExpenseType) {
     clearConsole();
 
     cout << "\n=== Select Expense Type ===\n";
@@ -125,16 +195,16 @@ void selectExpense() {
     cout << "2. Weekly Expenses\n";
     cout << "3. Daily Expenses\n";
 
-    int expenseType = getChoice(1, 3);
+    selectedExpenseType = static_cast<ExpenseType>(getChoice(1, 3));
 
-    switch (expenseType) {
-        case 1:
+    switch (selectedExpenseType) {
+        case ExpenseType::Monthly:
             cout << "\nYou selected Monthly Expenses.\n";
             break;
-        case 2:
+        case ExpenseType::Weekly:
             cout << "\nYou selected Weekly Expenses.\n";
             break;
-        case 3:
+        case ExpenseType::Daily:
             cout << "\nYou selected Daily Expenses.\n";
             break;
     }
@@ -162,6 +232,9 @@ void showExitScreen() {
 
  // Main program
 int main() {
+    // Pass this collection by reference to the feature functions.
+    vector<Expense> expenses;
+    ExpenseType selectedExpenseType = ExpenseType::Monthly;
     bool running = true;
 
     while (running) {
@@ -172,7 +245,7 @@ int main() {
 
         switch (choice) {
             case 1:
-                selectExpense();
+                selectExpense(selectedExpenseType);
                 break;
 
             case 2:
