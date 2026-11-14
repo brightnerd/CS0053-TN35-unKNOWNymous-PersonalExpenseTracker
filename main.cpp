@@ -97,6 +97,42 @@ void updateBudgetSpending(
     budget.savingsRemaining = budget.savingsBudget - budget.savingsContributed;
 }
 
+// Displays monthly budget summary
+void displayBudgetSummary(const Budget& budget, const string& yearMonth) {
+    // Displays monetary values with two decimal places
+    cout << fixed << setprecision(2);
+
+    cout << "\n========================================\n";
+    cout << "     MONTHLY BUDGET SUMMARY\n";
+    cout << "========================================\n";
+
+    cout << "Month: " << yearMonth << "\n";
+    cout << "Total Monthly Budget: PHP" << budget.monthlyBudget << "\n";
+
+    cout << "\n--- Budget Allocation ---\n";
+    cout << "Needs Budget (50%):   PHP " << budget.needsBudget << "\n";
+    cout << "Wants Budget (30%):   PHP " << budget.wantsBudget << "\n";
+    cout << "Savings Budget (20%): PHP " << budget.savingsBudget << "\n";
+
+    cout << "\n--- Actual Spending ---\n";
+    cout << "Needs Spent:          PHP " << budget.needsSpent << "\n";
+    cout << "Wants Spent:          PHP " << budget.wantsSpent << "\n";
+    cout << "Savings Contributed:  PHP " << budget.savingsContributed << "\n";
+
+    cout << "\n--- Remaining Budget ---\n";
+    cout << "Needs Remaining:      PHP " << budget.needsRemaining << "\n";
+    cout << "Wants Remaining:      PHP " << budget.wantsRemaining << "\n";
+    cout << "Savings Remaining:    PHP " << budget.savingsRemaining << "\n";
+
+    cout << "\n----------------------------------------\n";
+    cout << "Total Expenses:       PHP " << budget.totalExpenses << "\n";
+    cout << "========================================\n";
+
+    // Restores default stream formatting
+    cout.unsetf(ios::floatfield);
+    cout << setprecision(6);
+}
+
 // Quote CSV text and escape embedded quotation marks.
 string quoteCsvField(const string& value) {
     string quoted = "\"";
