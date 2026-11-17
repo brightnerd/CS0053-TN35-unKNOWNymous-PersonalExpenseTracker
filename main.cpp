@@ -1,8 +1,174 @@
 #include <iostream>
 #include <limits>
 #include <cstdlib>
+#include <string>
+#include <iomanip>
+#include <fstream>
+#include <vector>
+#include <map>
+
+#include "expense.h"
 
 using namespace std;
+
+// Budget allocation
+struct Budget {
+    double monthlyBudget;
+
+    double needsBudget;
+    double wantsBudget;
+    double savingsBudget;
+
+    // Spending and contributions
+    double needsSpent;
+    double wantsSpent;
+    double savingsContributed;
+
+    // remaining budget
+    double needsRemaining;
+    double wantsRemaining;
+    double savingsRemaining;
+
+    // Total expenses
+    double totalExpenses;
+};
+
+// 50/30/20 budget allocation
+Budget calculateBudget(double monthlyIncome) {
+    Budget budget;
+
+    budget.monthlyBudget = monthlyIncome;
+
+    budget.needsBudget = monthlyIncome * 0.5; // 50% for needs
+    budget.wantsBudget = monthlyIncome * 0.3; // 30% for wants
+    budget.savingsBudget = monthlyIncome * 0.2; // 20% for savings
+    
+    budget.needsSpent = 0.0;
+    budget.wantsSpent = 0.0;
+    budget.savingsContributed = 0.0;
+
+    budget.needsRemaining = budget.needsBudget;
+    budget.wantsRemaining = budget.wantsBudget;
+    budget.savingsRemaining = budget.savingsBudget;
+
+    budget.totalExpenses = 0.0;
+    
+    return budget;
+}
+
+void updateBudgetSpending(
+    Budget& budget,
+    const vector<Expense>& expenses,
+    const string& yearMonth
+) {
+    // Reset totals before recalculating
+    budget.needsSpent = 0.0;
+    budget.wantsSpent = 0.0;
+    budget.savingsContributed = 0.0;
+    budget.totalExpenses = 0.0;
+
+    // Check only expenses belonging to the selected month
+    for (const Expense& expense : expenses) {
+        if (expense.date.size() < 7 ||
+            expense.date.compare(0, 7, yearMonth) != 0) {
+            continue;
+        }
+
+        switch (expense.category) {
+            case ExpenseCategory::Needs:
+                budget.needsSpent += expense.amount;
+                break;
+
+            case ExpenseCategory::Wants:
+                budget.wantsSpent += expense.amount;
+                break;
+
+            case ExpenseCategory::Savings:
+                budget.savingsContributed += expense.amount;
+                break;
+        }
+    }
+
+    // Total ordinary expenses exclude savings contributions
+    budget.totalExpenses = budget.needsSpent + budget.wantsSpent;
+
+    // Calculate remaining budget
+    budget.needsRemaining = budget.needsBudget - budget.needsSpent;
+    budget.wantsRemaining = budget.wantsBudget - budget.wantsSpent;
+    budget.savingsRemaining = budget.savingsBudget - budget.savingsContributed;
+}
+
+// Displays monthly budget summary
+void displayBudgetSummary(const Budget& budget, const string& yearMonth) {
+    // Displays monetary values with two decimal places
+    cout << fixed << setprecision(2);
+
+    cout << "\n========================================\n";
+    cout << "        SPENDING SUMMARY\n";
+    cout << "========================================\n";
+
+    cout << "Month: " << yearMonth << "\n";
+    cout << "Monthly Income:       PHP " << budget.monthlyBudget << "\n";
+
+    cout << "\n--- Budget Allocation ---\n";
+    cout << "Needs Budget (50%):   PHP " << budget.needsBudget << "\n";
+    cout << "Wants Budget (30%):   PHP " << budget.wantsBudget << "\n";
+    cout << "Savings Budget (20%): PHP " << budget.savingsBudget << "\n";
+
+    cout << "\n--- Actual Spending ---\n";
+    cout << "Needs Spent:          PHP " << budget.needsSpent << "\n";
+    cout << "Wants Spent:          PHP " << budget.wantsSpent << "\n";
+    cout << "Savings Contributed:  PHP " << budget.savingsContributed << "\n";
+
+    cout << "\n--- Remaining Budget ---\n";
+    cout << "Needs Remaining:      PHP " << budget.needsRemaining << "\n";
+    cout << "Wants Remaining:      PHP " << budget.wantsRemaining << "\n";
+    cout << "Savings Remaining:    PHP " << budget.savingsRemaining << "\n";
+
+    cout << "\n----------------------------------------\n";
+    cout << "Total Expenses:       PHP " << budget.totalExpenses << "\n";
+    cout << "========================================\n";
+
+    // Restores default stream formatting
+    cout.unsetf(ios::floatfield);
+    cout << setprecision(6);
+}
+
+// Quote CSV text and escape embedded quotation marks.
+string quoteCsvField(const string& value) {
+    string quoted = "\"";
+    for (char character : value) {
+        if (character == '"') {
+            quoted += '"';
+        }
+        quoted += character;
+    }
+    quoted += '"';
+    return quoted;
+}
+
+// Save the current records. Call after successful add/update/delete operations.
+bool saveExpenses(const vector<Expense>& expenses, const string& filename) {
+    ofstream file(filename, ios::binary | ios::trunc);
+    if (!file.is_open()) {
+        return false;
+    }
+
+    file << "id,description,amount,date,category,expenseType\n";
+    file << setprecision(numeric_limits<double>::max_digits10);
+
+    for (const Expense& expense : expenses) {
+        file << expense.id << ','
+             << quoteCsvField(expense.description) << ','
+             << expense.amount << ','
+             << quoteCsvField(expense.date) << ','
+             << static_cast<int>(expense.category) << ','
+             << static_cast<int>(expense.expenseType) << '\n';
+    }
+
+    file.close();
+    return !file.fail();
+}
 
 // Clear console
 void clearConsole() {
@@ -18,6 +184,123 @@ void pauseConsole() {
     cout << "\nPress Enter to continue...";
     string line;
     getline(cin, line);
+}
+
+// Sets or updates income for the selected month
+void setMonthlyIncome(map<string, double>& monthlyIncomes) {
+
+    string yearMonth;
+
+    cout << "\nEnter the month (YYYY-MM): ";
+    getline(cin, yearMonth);
+
+    // Validate month format
+    bool validMonth = yearMonth.size() == 7 &&
+                      yearMonth[4] == '-';
+
+    if (validMonth) {
+        for (int i = 0; i < 7; i++) {
+            if (i != 4 && (yearMonth[i] < '0' ||
+                           yearMonth[i] > '9')) {
+                validMonth = false;
+                break;
+            }
+        }
+    }
+
+    if (validMonth) {
+        int month = stoi(yearMonth.substr(5, 2));
+
+        if (month < 1 || month > 12) {
+            validMonth = false;
+        }
+    }
+
+    // Stop if the month is invalid
+    if (!validMonth) {
+        cout << "Invalid month. Use YYYY-MM format.\n";
+        return;
+    }
+
+    double income;
+
+    cout << "Enter monthly income: PHP ";
+    
+    if (!(cin >> income) || income <= 0) {
+        cout << "Invalid income. Please enter a positive number.\n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    monthlyIncomes[yearMonth] = income;
+
+    cout << "Monthly income for " << yearMonth 
+         << " has been saved: PHP " 
+         << fixed << setprecision(2) << income << "\n";
+
+    cout.unsetf(ios::floatfield);
+    cout << setprecision(6);
+}
+
+// Handles the monthly budget summary menu
+void showBudgetSummaryMenu(
+    const vector<Expense>& expenses,
+    const map<string, double>& monthlyIncomes
+) {
+    string yearMonth;
+
+    while (true) {
+        cout << "\nEnter the month for the budget summary (YYYY-MM): ";
+        getline(cin, yearMonth);
+
+        bool validMonth = yearMonth.size() == 7 &&
+                          yearMonth[4] == '-';
+
+        if (validMonth) {
+            for (int i = 0; i < 7; i++) {
+                if (i != 4 && (yearMonth[i] < '0' ||
+                               yearMonth[i] > '9')) {
+                    validMonth = false;
+                    break;
+                }
+            }
+        }
+
+        if (validMonth) {
+            int month = stoi(yearMonth.substr(5, 2));
+
+            if (month >= 1 && month <= 12) {
+                break;
+            }
+        }
+
+        cout << "Invalid month. Use YYYY-MM format.\n";
+    }
+
+    // Retrieve the income saved for the selected month
+    auto incomeRecord = monthlyIncomes.find(yearMonth);
+
+    if (incomeRecord == monthlyIncomes.end()) {
+        cout << "\nNo monthly income has been set for "
+             << yearMonth << ".\n";
+        cout << "Please set the monthly income first.\n";
+        pauseConsole();
+        return;
+    }
+
+    double monthlyIncome = incomeRecord->second;
+
+    // Calculate and display budget summary
+    Budget budget = calculateBudget(monthlyIncome);
+
+    updateBudgetSpending(budget, expenses, yearMonth);
+
+    displayBudgetSummary(budget, yearMonth);
+
+    pauseConsole();
 }
 
 // Get and validate user choice
@@ -58,7 +341,7 @@ void showMenu() {
 }
 
 // Select expense type
-void selectExpense() {
+void selectExpense(ExpenseType& selectedExpenseType) {
     clearConsole();
 
     cout << "\n=== Select Expense Type ===\n";
@@ -66,16 +349,16 @@ void selectExpense() {
     cout << "2. Weekly Expenses\n";
     cout << "3. Daily Expenses\n";
 
-    int expenseType = getChoice(1, 3);
+    selectedExpenseType = static_cast<ExpenseType>(getChoice(1, 3));
 
-    switch (expenseType) {
-        case 1:
+    switch (selectedExpenseType) {
+        case ExpenseType::Monthly:
             cout << "\nYou selected Monthly Expenses.\n";
             break;
-        case 2:
+        case ExpenseType::Weekly:
             cout << "\nYou selected Weekly Expenses.\n";
             break;
-        case 3:
+        case ExpenseType::Daily:
             cout << "\nYou selected Daily Expenses.\n";
             break;
     }
@@ -103,6 +386,10 @@ void showExitScreen() {
 
  // Main program
 int main() {
+    // Pass this collection by reference to the feature functions.
+    vector<Expense> expenses;
+    map<string, double> monthlyIncomes;
+    ExpenseType selectedExpenseType = ExpenseType::Monthly;
     bool running = true;
 
     while (running) {
@@ -113,7 +400,7 @@ int main() {
 
         switch (choice) {
             case 1:
-                selectExpense();
+                selectExpense(selectedExpenseType);
                 break;
 
             case 2:
@@ -142,8 +429,7 @@ int main() {
 
             case 6:
                 clearConsole();
-                cout << "\nSpending Summary will be implemented next.\n";
-                pauseConsole();
+                showBudgetSummaryMenu(expenses, monthlyIncomes);
                 break;
 
             case 7:
