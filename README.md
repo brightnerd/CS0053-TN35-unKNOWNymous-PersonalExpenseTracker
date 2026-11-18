@@ -631,7 +631,7 @@ cd CS0053-TN35-unKNOWNymous-PersonalExpenseTracker
 Using `g++`:
 
 ``` bash
-g++ -std=c++11 main.cpp -o PersonalExpenseTracker
+g++ -std=c++11 main.cpp -o PET
 ```
 
 If your compiler uses a different default standard, make sure it
@@ -642,13 +642,13 @@ supports the C++ features used by the source code.
 **Windows:**
 
 ``` bash
-PersonalExpenseTracker.exe
+PET.exe
 ```
 
 **Linux/macOS:**
 
 ``` bash
-./PersonalExpenseTracker
+./PET
 ```
 
 ### 5. Start Using the Application
