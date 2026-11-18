@@ -642,7 +642,7 @@ supports the C++ features used by the source code.
 **Windows:**
 
 ``` bash
-PET.exe
+.\PET.exe
 ```
 
 **Linux/macOS:**
