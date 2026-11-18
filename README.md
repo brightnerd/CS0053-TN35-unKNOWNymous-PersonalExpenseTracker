@@ -47,7 +47,7 @@ rule**.
     - [1. Clone the Repository](#1-clone-the-repository)
     - [2. Open the Project Directory](#2-open-the-project-directory)
     - [3. Compile the Source Code](#3-compile-the-source-code)
-    - [4. Run the Application](#4-run-the-application)
+    - [4. Run the Applicatiogit add README.mdn](#4-run-the-applicatiogit-add-readmemdn)
     - [5. Start Using the Application](#5-start-using-the-application)
   - [📊 Sample Budget Calculation](#-sample-budget-calculation)
   - [🛡️ Validation and Error Handling](#️-validation-and-error-handling)
@@ -637,7 +637,7 @@ g++ -std=c++11 main.cpp -o PET
 If your compiler uses a different default standard, make sure it
 supports the C++ features used by the source code.
 
-### 4. Run the Application
+### 4. Run the Applicatiogit add README.mdn
 
 **Windows:**
 
