@@ -53,7 +53,8 @@ rule**.
   - [🛡️ Validation and Error Handling](#️-validation-and-error-handling)
   - [🧪 Testing](#-testing)
     - [🔍 Static Analysis (Cppcheck)](#-static-analysis-cppcheck)
-  - [Cppcheck successfully analyzed `main.cpp` and identified opportunities to improve code readability and make better use of C++ Standard Library algorithms. The findings are style recommendations and do not indicate confirmed functional errors.](#cppcheck-successfully-analyzed-maincpp-and-identified-opportunities-to-improve-code-readability-and-make-better-use-of-c-standard-library-algorithms-the-findings-are-style-recommendations-and-do-not-indicate-confirmed-functional-errors)
+    - [🐞 Debugger – GDB \& VS Code](#-debugger--gdb--vs-code)
+    - [**Debugging Evidence:**](#debugging-evidence)
   - [⚠️ Limitations](#️-limitations)
   - [👥 Development Team](#-development-team)
     - [Development and Collaboration](#development-and-collaboration)
@@ -801,6 +802,21 @@ The analysis completed with the following findings:
 **Conclusion:**
 
 Cppcheck successfully analyzed `main.cpp` and identified opportunities to improve code readability and make better use of C++ Standard Library algorithms. The findings are style recommendations and do not indicate confirmed functional errors.
+
+
+### 🐞 Debugger – GDB & VS Code
+
+**Debugger:** GNU GDB 17.2
+
+**Description:**
+
+GNU GDB was configured with Visual Studio Code to debug the Personal Expense Tracker. It supports breakpoints, step-by-step execution, and variable inspection to help identify and troubleshoot runtime errors.
+
+### **Debugging Evidence:**
+
+![Successful GDB Debugging](debugger-success.png)
+
+
 ------------------------------------------------------------------------
 
 ## ⚠️ Limitations
