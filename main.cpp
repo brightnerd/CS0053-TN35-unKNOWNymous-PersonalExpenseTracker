@@ -69,8 +69,8 @@ int getChoice(int minValue, int maxValue) {
             return choice;
         }
 
-        cout << "Invalid choice. Please enter a number from "
-             << minValue << " to " << maxValue << ".\n";
+        cout << "Invalid choice. Please enter a number from " << minValue << " to " << maxValue
+             << ".\n";
 
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -128,9 +128,7 @@ string readRequiredText(const string& prompt) {
 
 string lowercaseText(string value) {
     for (char& character : value) {
-        character = static_cast<char>(
-            tolower(static_cast<unsigned char>(character))
-        );
+        character = static_cast<char>(tolower(static_cast<unsigned char>(character)));
     }
     return value;
 }
@@ -145,8 +143,7 @@ bool isValidDate(const string& date) {
     }
 
     for (size_t i = 0; i < date.size(); ++i) {
-        if (i != 4 && i != 7 &&
-            !isdigit(static_cast<unsigned char>(date[i]))) {
+        if (i != 4 && i != 7 && !isdigit(static_cast<unsigned char>(date[i]))) {
             return false;
         }
     }
@@ -159,14 +156,10 @@ bool isValidDate(const string& date) {
         return false;
     }
 
-    const int daysInMonth[] = {
-        31, 28, 31, 30, 31, 30,
-        31, 31, 30, 31, 30, 31
-    };
+    const int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     int maxDay = daysInMonth[month - 1];
-    bool leapYear = (year % 400 == 0) ||
-                    (year % 4 == 0 && year % 100 != 0);
+    bool leapYear = (year % 400 == 0) || (year % 4 == 0 && year % 100 != 0);
 
     if (month == 2 && leapYear) {
         maxDay = 29;
@@ -181,8 +174,7 @@ bool isValidYearMonth(const string& yearMonth) {
     }
 
     for (size_t i = 0; i < yearMonth.size(); ++i) {
-        if (i != 4 &&
-            !isdigit(static_cast<unsigned char>(yearMonth[i]))) {
+        if (i != 4 && !isdigit(static_cast<unsigned char>(yearMonth[i]))) {
             return false;
         }
     }
@@ -229,18 +221,24 @@ string readValidDate(const string& prompt) {
 
 const char* categoryName(ExpenseCategory category) {
     switch (category) {
-        case ExpenseCategory::Needs: return "Needs";
-        case ExpenseCategory::Wants: return "Wants";
-        case ExpenseCategory::Savings: return "Savings";
+        case ExpenseCategory::Needs:
+            return "Needs";
+        case ExpenseCategory::Wants:
+            return "Wants";
+        case ExpenseCategory::Savings:
+            return "Savings";
     }
     return "Unknown";
 }
 
 const char* expenseTypeName(ExpenseType type) {
     switch (type) {
-        case ExpenseType::Monthly: return "Monthly";
-        case ExpenseType::Weekly: return "Weekly";
-        case ExpenseType::Daily: return "Daily";
+        case ExpenseType::Monthly:
+            return "Monthly";
+        case ExpenseType::Weekly:
+            return "Weekly";
+        case ExpenseType::Daily:
+            return "Daily";
     }
     return "Unknown";
 }
@@ -256,8 +254,7 @@ void selectExpenseType(ExpenseType& selectedType) {
 
     selectedType = static_cast<ExpenseType>(getChoice(1, 3));
 
-    cout << "\nSelected: " << expenseTypeName(selectedType)
-         << " Expenses.\n";
+    cout << "\nSelected: " << expenseTypeName(selectedType) << " Expenses.\n";
 
     pauseConsole();
 }
@@ -289,8 +286,7 @@ vector<string> parseCsvRow(const string& row) {
         char character = row[i];
 
         if (character == '"') {
-            if (insideQuotes && i + 1 < row.size() &&
-                row[i + 1] == '"') {
+            if (insideQuotes && i + 1 < row.size() && row[i + 1] == '"') {
                 field += '"';
                 ++i;
             } else {
@@ -331,8 +327,7 @@ int nextExpenseId(const vector<Expense>& expenses) {
     return largestId + 1;
 }
 
-bool saveExpenses(const vector<Expense>& expenses,
-                  const string& filename) {
+bool saveExpenses(const vector<Expense>& expenses, const string& filename) {
     ofstream file(filename, ios::binary | ios::trunc);
 
     if (!file.is_open()) {
@@ -343,28 +338,24 @@ bool saveExpenses(const vector<Expense>& expenses,
     file << setprecision(numeric_limits<double>::max_digits10);
 
     for (const Expense& expense : expenses) {
-        file << expense.id << ','
-             << quoteCsvField(expense.description) << ','
-             << expense.amount << ','
-             << quoteCsvField(expense.date) << ','
-             << static_cast<int>(expense.category) << ','
-             << static_cast<int>(expense.expenseType) << '\n';
+        file << expense.id << ',' << quoteCsvField(expense.description) << ',' << expense.amount
+             << ',' << quoteCsvField(expense.date) << ',' << static_cast<int>(expense.category)
+             << ',' << static_cast<int>(expense.expenseType) << '\n';
     }
 
     file.close();
     return !file.fail();
 }
 
-bool loadExpenses(vector<Expense>& expenses,
-                  const string& filename) {
+bool loadExpenses(vector<Expense>& expenses, const string& filename) {
     ifstream file(filename, ios::binary);
 
     if (!file.is_open()) {
-        return true; // No file is normal on the first run.
+        return true;  // No file is normal on the first run.
     }
 
     string row;
-    getline(file, row); // Skip CSV header.
+    getline(file, row);  // Skip CSV header.
 
     while (getline(file, row)) {
         if (row.empty()) {
@@ -387,21 +378,15 @@ bool loadExpenses(vector<Expense>& expenses,
             int categoryValue = stoi(fields[4]);
             int typeValue = stoi(fields[5]);
 
-            if (expense.id <= 0 ||
-                expense.description.empty() ||
-                !isfinite(expense.amount) ||
-                expense.amount <= 0.0 ||
-                !isValidDate(expense.date) ||
-                categoryValue < 1 || categoryValue > 3 ||
-                typeValue < 1 || typeValue > 3 ||
+            if (expense.id <= 0 || expense.description.empty() || !isfinite(expense.amount) ||
+                expense.amount <= 0.0 || !isValidDate(expense.date) || categoryValue < 1 ||
+                categoryValue > 3 || typeValue < 1 || typeValue > 3 ||
                 findExpenseIndexById(expenses, expense.id) != -1) {
                 continue;
             }
 
-            expense.category =
-                static_cast<ExpenseCategory>(categoryValue);
-            expense.expenseType =
-                static_cast<ExpenseType>(typeValue);
+            expense.category = static_cast<ExpenseCategory>(categoryValue);
+            expense.expenseType = static_cast<ExpenseType>(typeValue);
 
             expenses.push_back(expense);
         } catch (...) {
@@ -413,14 +398,10 @@ bool loadExpenses(vector<Expense>& expenses,
 }
 
 void displayExpense(const Expense& expense) {
-    cout << "\nID: " << expense.id
-         << "\nDescription: " << expense.description
-         << "\nAmount: PHP " << fixed << setprecision(2)
-         << expense.amount
-         << "\nDate: " << expense.date
+    cout << "\nID: " << expense.id << "\nDescription: " << expense.description << "\nAmount: PHP "
+         << fixed << setprecision(2) << expense.amount << "\nDate: " << expense.date
          << "\nCategory: " << categoryName(expense.category)
-         << "\nExpense type: " << expenseTypeName(expense.expenseType)
-         << "\n";
+         << "\nExpense type: " << expenseTypeName(expense.expenseType) << "\n";
 
     cout.unsetf(ios::floatfield);
     cout << setprecision(6);
@@ -439,15 +420,13 @@ void addExpense(vector<Expense>& expenses, ExpenseType selectedType) {
     cout << "2. Wants\n";
     cout << "3. Savings contribution\n";
 
-    expense.category =
-        static_cast<ExpenseCategory>(getChoice(1, 3));
+    expense.category = static_cast<ExpenseCategory>(getChoice(1, 3));
     expense.expenseType = selectedType;
 
     expenses.push_back(expense);
 
     if (saveExpenses(expenses, EXPENSES_FILE)) {
-        cout << "\nExpense added and saved with ID "
-             << expense.id << ".\n";
+        cout << "\nExpense added and saved with ID " << expense.id << ".\n";
     } else {
         expenses.pop_back();
         cout << "\nCould not save the expense. No record was added.\n";
@@ -491,9 +470,7 @@ void searchExpenses(const vector<Expense>& expenses) {
         return;
     }
 
-    string query = lowercaseText(
-        readRequiredText("Enter description to search: ")
-    );
+    string query = lowercaseText(readRequiredText("Enter description to search: "));
 
     bool found = false;
 
@@ -536,13 +513,11 @@ void updateExpense(vector<Expense>& expenses) {
 
     cout << "\nCategory:\n";
     cout << "1. Needs\n2. Wants\n3. Savings contribution\n";
-    updated.category =
-        static_cast<ExpenseCategory>(getChoice(1, 3));
+    updated.category = static_cast<ExpenseCategory>(getChoice(1, 3));
 
     cout << "\nExpense type:\n";
     cout << "1. Monthly\n2. Weekly\n3. Daily\n";
-    updated.expenseType =
-        static_cast<ExpenseType>(getChoice(1, 3));
+    updated.expenseType = static_cast<ExpenseType>(getChoice(1, 3));
 
     updated.id = original.id;
     expenses[index] = updated;
@@ -635,8 +610,7 @@ bool loadMonthlyIncomes(map<string, double>& monthlyIncomes) {
         try {
             double amount = stod(amountText);
 
-            if (isValidYearMonth(yearMonth) &&
-                isfinite(amount) && amount > 0.0) {
+            if (isValidYearMonth(yearMonth) && isfinite(amount) && amount > 0.0) {
                 monthlyIncomes[yearMonth] = amount;
             }
         } catch (...) {
@@ -709,19 +683,15 @@ Budget calculateBudget(double monthlyIncome) {
     return budget;
 }
 
-void updateBudgetSpending(
-    Budget& budget,
-    const vector<Expense>& expenses,
-    const string& yearMonth
-) {
+void updateBudgetSpending(Budget& budget, const vector<Expense>& expenses,
+                          const string& yearMonth) {
     budget.needsSpent = 0.0;
     budget.wantsSpent = 0.0;
     budget.savingsContributed = 0.0;
     budget.totalExpenses = 0.0;
 
     for (const Expense& expense : expenses) {
-        if (expense.date.size() < 7 ||
-            expense.date.compare(0, 7, yearMonth) != 0) {
+        if (expense.date.size() < 7 || expense.date.compare(0, 7, yearMonth) != 0) {
             continue;
         }
 
@@ -744,8 +714,7 @@ void updateBudgetSpending(
 
     budget.needsRemaining = budget.needsBudget - budget.needsSpent;
     budget.wantsRemaining = budget.wantsBudget - budget.wantsSpent;
-    budget.savingsRemaining =
-        budget.savingsBudget - budget.savingsContributed;
+    budget.savingsRemaining = budget.savingsBudget - budget.savingsContributed;
 }
 
 void displayBudgetSummary(const Budget& budget, const string& yearMonth) {
@@ -768,14 +737,12 @@ void displayBudgetSummary(const Budget& budget, const string& yearMonth) {
     cout << "\n--- Actual Spending ---\n";
     cout << "Needs Spent:          PHP " << budget.needsSpent << '\n';
     cout << "Wants Spent:          PHP " << budget.wantsSpent << '\n';
-    cout << "Savings Contributed:  PHP "
-         << budget.savingsContributed << '\n';
+    cout << "Savings Contributed:  PHP " << budget.savingsContributed << '\n';
 
     cout << "\n--- Remaining Budget ---\n";
     cout << "Needs Remaining:      PHP " << budget.needsRemaining << '\n';
     cout << "Wants Remaining:      PHP " << budget.wantsRemaining << '\n';
-    cout << "Savings Remaining:    PHP "
-         << budget.savingsRemaining << '\n';
+    cout << "Savings Remaining:    PHP " << budget.savingsRemaining << '\n';
 
     cout << "\n----------------------------------------\n";
     cout << "Total Expenses:       PHP " << budget.totalExpenses << '\n';
@@ -785,19 +752,14 @@ void displayBudgetSummary(const Budget& budget, const string& yearMonth) {
     cout.precision(oldPrecision);
 }
 
-void showBudgetSummaryMenu(
-    const vector<Expense>& expenses,
-    const map<string, double>& monthlyIncomes
-) {
-    string yearMonth = readYearMonth(
-        "Enter month for budget summary (YYYY-MM): "
-    );
+void showBudgetSummaryMenu(const vector<Expense>& expenses,
+                           const map<string, double>& monthlyIncomes) {
+    string yearMonth = readYearMonth("Enter month for budget summary (YYYY-MM): ");
 
     auto incomeRecord = monthlyIncomes.find(yearMonth);
 
     if (incomeRecord == monthlyIncomes.end()) {
-        cout << "No monthly income has been set for "
-             << yearMonth << ".\n";
+        cout << "No monthly income has been set for " << yearMonth << ".\n";
         cout << "Please set the monthly income first.\n";
         return;
     }
@@ -812,7 +774,7 @@ void showBudgetSummaryMenu(
 // ============================================================
 
 void showAbout() {
-cout << "\n";
+    cout << "\n";
     cout << "============================================\n";
     cout << "             ABOUT THE SYSTEM               \n";
     cout << "============================================\n";
@@ -919,10 +881,7 @@ void showMenu() {
     cout << "====================================\n";
 }
 
-bool saveAllData(
-    const vector<Expense>& expenses,
-    const map<string, double>& monthlyIncomes
-) {
+bool saveAllData(const vector<Expense>& expenses, const map<string, double>& monthlyIncomes) {
     bool expensesSaved = saveExpenses(expenses, EXPENSES_FILE);
     bool incomesSaved = saveMonthlyIncomes(monthlyIncomes);
 
@@ -970,8 +929,7 @@ int main() {
             case 3:
                 clearConsole();
                 cout << "\n========== ADD EXPENSE ==========\n";
-                cout << "Selected expense type: "
-                     << expenseTypeName(selectedExpenseType) << "\n\n";
+                cout << "Selected expense type: " << expenseTypeName(selectedExpenseType) << "\n\n";
                 addExpense(expenses, selectedExpenseType);
                 pauseConsole();
                 break;
