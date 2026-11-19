@@ -52,6 +52,8 @@ rule**.
   - [📊 Sample Budget Calculation](#-sample-budget-calculation)
   - [🛡️ Validation and Error Handling](#️-validation-and-error-handling)
   - [🧪 Testing](#-testing)
+    - [🔍 Static Analysis (Cppcheck)](#-static-analysis-cppcheck)
+  - [Cppcheck successfully analyzed `main.cpp` and identified opportunities to improve code readability and make better use of C++ Standard Library algorithms. The findings are style recommendations and do not indicate confirmed functional errors.](#cppcheck-successfully-analyzed-maincpp-and-identified-opportunities-to-improve-code-readability-and-make-better-use-of-c-standard-library-algorithms-the-findings-are-style-recommendations-and-do-not-indicate-confirmed-functional-errors)
   - [⚠️ Limitations](#️-limitations)
   - [👥 Development Team](#-development-team)
     - [Development and Collaboration](#development-and-collaboration)
@@ -763,11 +765,42 @@ behavior. Actual results should be documented after executing the tests.
   10\. Data Persistence   Save, close, and reopen Previously saved
                           the application.        expenses and income are
                                                   loaded.
+
   -----------------------------------------------------------------------
 
 Testing results should include the actual observed program output. Do
 not report a test as passed until it has been executed and verified.
 
+------------------------------------------------------------------------
+### 🔍 Static Analysis (Cppcheck)
+
+**Tool:** Cppcheck 2.22.0
+
+Cppcheck was used to perform static analysis on `main.cpp` to identify potential programming issues and code-quality improvements without executing the program.
+
+**Command Used:**
+```bash
+cppcheck --enable=all --suppress=missingIncludeSystem --language=c++ --std=c++17 main.cpp
+```
+
+**Analysis Results:**
+
+The analysis completed with the following findings:
+
+| Line | Check | Recommendation |
+|---|---|---|
+| 131 | `useStlAlgorithm` | Consider using `std::transform` instead of a raw loop. |
+| 313 | `useStlAlgorithm` | Consider using `std::find_if` instead of a raw loop. |
+| 324 | `useStlAlgorithm` | Consider using `std::accumulate` instead of a raw loop. |
+
+**Summary:**
+- 3 style recommendations reported.
+- No errors or warnings reported in the provided output.
+- 176 out of 189 available checkers activated.
+
+**Conclusion:**
+
+Cppcheck successfully analyzed `main.cpp` and identified opportunities to improve code readability and make better use of C++ Standard Library algorithms. The findings are style recommendations and do not indicate confirmed functional errors.
 ------------------------------------------------------------------------
 
 ## ⚠️ Limitations
