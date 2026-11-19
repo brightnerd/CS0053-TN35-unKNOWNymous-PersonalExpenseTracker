@@ -631,7 +631,7 @@ cd CS0053-TN35-unKNOWNymous-PersonalExpenseTracker
 Using `g++`:
 
 ``` bash
-g++ -std=c++11 main.cpp -o PET
+g++ -std=c++11 main.cpp -o PET.exe
 ```
 
 If your compiler uses a different default standard, make sure it
