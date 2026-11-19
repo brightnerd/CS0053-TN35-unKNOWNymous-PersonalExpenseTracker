@@ -812,13 +812,93 @@ void showBudgetSummaryMenu(
 // ============================================================
 
 void showAbout() {
-    cout << "\n========== ABOUT THE SYSTEM ==========\n";
-    cout << "Personal Expense Tracker\n";
-    cout << "A C++ application for recording and managing expenses.\n";
-    cout << "It organizes expenses into Needs, Wants, and Savings\n";
-    cout << "using the 50/30/20 budgeting rule.\n";
-    cout << "Expense records and monthly income are saved locally.\n";
-    cout << "======================================\n";
+cout << "\n";
+    cout << "============================================\n";
+    cout << "             ABOUT THE SYSTEM               \n";
+    cout << "============================================\n";
+
+    cout << "\n          [ SYSTEM INFORMATION ]      \n";
+    cout << "Personal Expense Tracker (PET) is a C++ console\n";
+    cout << "application that helps users record, organize,\n";
+    cout << "and monitor their personal expenses and income.\n";
+
+    cout << "\n       [ FREQUENTLY ASKED QUESTIONS ]      \n";
+
+    cout << "\n1. What is the 50/30/20 Budgeting Rule?\n";
+    cout << "   Needs   - 50% for essential expenses.\n";
+    cout << "   Wants   - 30% for non-essential expenses.\n";
+    cout << "   Savings - 20% for future financial goals.\n";
+
+    cout << "\n2. What are the available expense types?\n";
+    cout << "   Monthly, Weekly, and Daily.\n";
+
+    cout << "\n3. Can I edit or delete an expense?\n";
+    cout << "   Yes! You can search, update, and delete\n";
+    cout << "   existing expense records.\n";
+
+    cout << "\n4. Will my records be saved?\n";
+    cout << "   Yes! Records are stored locally in text files.\n";
+
+    cout << "\n5. Does PET connect to my bank account?\n";
+    cout << "   No. All transactions must be entered manually.\n";
+
+    cout << "\n============================================\n";
+    cout << "             QUICK USER TUTORIAL             \n";
+    cout << "============================================\n";
+
+    cout << "\n     [ HOW TO USE THE 11 MENU CHOICES ]\n";
+
+    cout << "\n[1] Select Type of Expense\n";
+    cout << "    Choose Monthly, Weekly, or Daily.\n";
+    cout << "    Do this before adding an expense.\n";
+
+    cout << "\n[2] Set Monthly Income\n";
+    cout << "    Enter your monthly income and the month\n";
+    cout << "    it belongs to (YYYY-MM).\n";
+
+    cout << "\n[3] Add an Expense\n";
+    cout << "    Enter the description, amount, date,\n";
+    cout << "    and budget category (Needs, Wants, Savings).\n";
+
+    cout << "\n[4] View All Expenses\n";
+    cout << "    Display all recorded expense transactions.\n";
+
+    cout << "\n[5] Search an Expense\n";
+    cout << "    Find an expense using its ID or description.\n";
+
+    cout << "\n[6] Update an Expense\n";
+    cout << "    Select an existing expense ID and modify\n";
+    cout << "    its information.\n";
+
+    cout << "\n[7] Delete an Expense\n";
+    cout << "    Select an expense ID and confirm deletion.\n";
+
+    cout << "\n[8] Show Spending Summary\n";
+    cout << "    Enter the month you want to review.\n";
+    cout << "    Check your budget allocation, actual spending,\n";
+    cout << "    and remaining balance.\n";
+
+    cout << "\n[9] Save Data\n";
+    cout << "    Save your expense records and monthly income.\n";
+
+    cout << "\n[10] About the System\n";
+    cout << "     View system information and this tutorial.\n";
+
+    cout << "\n[0] Exit\n";
+    cout << "    Save outstanding changes and close PET.\n";
+
+    cout << "\n============================================\n";
+    cout << "             IMPORTANT REMINDERS             \n";
+    cout << "============================================\n";
+    cout << "- Enter valid amounts and dates.\n";
+    cout << "- Use YYYY-MM-DD for expense dates.\n";
+    cout << "- Use YYYY-MM for monthly income.\n";
+    cout << "- Always check your spending summary.\n";
+    cout << "- Save your data before exiting.\n";
+
+    cout << "\n============================================\n";
+    cout << "       THANK YOU FOR USING PET! <3           \n";
+    cout << "============================================\n";
 }
 
 void showMenu() {
