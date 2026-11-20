@@ -129,7 +129,7 @@ through the 50/30/20 budgeting rule.
 ------------------------------------------------------------------------
 
 ## ✨ Core Features
-
+  ```
   -----------------------------------------------------------------------
   Feature                             Description
   ----------------------------------- -----------------------------------
@@ -164,6 +164,7 @@ through the 50/30/20 budgeting rule.
 
   About the System                    Display information about the
                                       application.
+  ```
   -----------------------------------------------------------------------
 
 ### Main Menu
@@ -235,12 +236,13 @@ has been achieved.
 
 Before adding an expense, users can select one of the following expense
 types:
-
+  ```
   Expense Type   Description
   -------------- ---------------------------------
-  **Monthly**    Expenses identified as monthly.
-  **Weekly**     Expenses identified as weekly.
-  **Daily**      Expenses identified as daily.
+    Monthly      Expenses identified as monthly.
+    Weekly       Expenses identified as weekly.
+    Daily        Expenses identified as daily.
+  ```
 
 The selected expense type is stored with the expense record. It serves
 as a classification of the transaction and is distinct from the 50/30/20
@@ -374,14 +376,14 @@ manage the application's records and inputs.
 
 CRUD stands for Create, Read, Update, and Delete. These operations allow
 users to manage expense records.
-
+  ```
   Operation    Application
   ------------ ------------------------------------
-  **Create**   Add a new expense record.
-  **Read**     View saved expense records.
-  **Update**   Modify an existing expense record.
-  **Delete**   Remove an expense record.
-
+    Create     Add a new expense record.
+     Read      View saved expense records.
+    Update     Modify an existing expense record.
+    Delete     Remove an expense record.
+  ```
 ### 2. Linear Search
 
 Linear Search is used to locate an expense by its ID. The program checks
@@ -586,18 +588,22 @@ CS0053-TN35-unKNOWNymous-PersonalExpenseTracker/
 │       └── UnitTestMcp.UnitTestEngineer.agent.md
 │
 ├── .vscode/
+│   ├── launch.json
 │   └── tasks.json
+│
+├── debugger-success.png
 │
 ├── expense.h
 ├── main.cpp
+├── .clang-format
 ├── .gitignore
+├── AI_Interaction_Logs.md
 └── README.md
 ```
 
-**Generated files:** When the application runs, it creates or updates
-`expenses.txt` and `monthly_income.txt` in its working directory.
-Executable files such as `.exe` files are build outputs and are not
-required to compile the source code.
+**Generated Files:** When the application runs, it creates or updates `expenses.txt` and `monthly_income.txt` in its working directory to store expense and income records. Executable files such as `.exe` files are generated during compilation and are not required source files. 
+
+The `.vscode/` configuration files, `.clang-format`, `debugger-success.png`, and `AI_Interaction_Logs.md` support the project's development, debugging, and documentation.
 
 ------------------------------------------------------------------------
 
@@ -672,33 +678,35 @@ expected working directory.
 ## 📊 Sample Budget Calculation
 
 Suppose a user has a monthly income of **₱20,000.00**.
-
+  ```
   Category      Allocation           Budget
   ----------- ------------ ----------------
   Needs                50%       ₱10,000.00
   Wants                30%        ₱6,000.00
   Savings              20%        ₱4,000.00
-  **Total**       **100%**   **₱20,000.00**
-
+  ----------- ------------ ----------------
+  Total                100%       ₱20,000.00
+  ```
 Assume the user records the following transactions for the selected
 month:
-
+  ```
   Category                  Actual Amount
   ----------------------- ---------------
   Needs                         ₱7,500.00
   Wants                         ₱2,000.00
   Savings Contributions         ₱1,000.00
+  ```
 
 The resulting balances are:
-
+  ```
   Category     Allocated Budget   Actual Amount   Remaining
   ---------- ------------------ --------------- -----------
   Needs              ₱10,000.00       ₱7,500.00   ₱2,500.00
   Wants               ₱6,000.00       ₱2,000.00   ₱4,000.00
   Savings             ₱4,000.00       ₱1,000.00   ₱3,000.00
-
+  ```
 **Total ordinary expenses:** ₱9,500.00 (Needs + Wants).
-
+  
 The savings contribution is shown separately and is not included in
 ordinary expenses. A negative remaining balance indicates that actual
 spending or contributions have exceeded the corresponding allocation.
@@ -721,58 +729,52 @@ help maintain reliable records.
 -   Invalid or malformed saved expense rows are skipped during loading.
 -   If saving an expense update or deletion fails, the original
     in-memory record is restored.
-
 ------------------------------------------------------------------------
-
 ## 🧪 Testing
 
 The following scenarios are recommended for verifying the application's
 behavior. Actual results should be documented after executing the tests.
-
+  ```
   -----------------------------------------------------------------------
   Test Case               Scenario                Expected Result
   ----------------------- ----------------------- -----------------------
-  1\. Valid Income        Enter a positive        The income is saved for
+  1. Valid Income        Enter a positive        The income is saved for
                           monthly income.         the selected month.
 
-  2\. Invalid Income      Enter zero, a negative  The system rejects the
+  2. Invalid Income      Enter zero, a negative  The system rejects the
                           amount, or non-numeric  value and requests
                           input.                  valid input.
 
-  3\. Add Expense         Enter valid expense     The expense is assigned
+  3. Add Expense         Enter valid expense     The expense is assigned
                           details and a category. an ID and saved.
 
-  4\. View Expenses       Open the expense list   Saved expense records
+  4. View Expenses       Open the expense list   Saved expense records
                           when records exist.     are displayed.
 
-  5\. Search Existing ID  Search using an         The matching expense is
+  5. Search Existing ID  Search using an         The matching expense is
                           existing expense ID.    displayed.
 
-  6\. Search Missing ID   Search using a          An expense-not-found
+  6. Search Missing ID   Search using a          An expense-not-found
                           nonexistent ID.         message is displayed.
 
-  7\. Update Expense      Update an existing      The revised record is
+  7. Update Expense      Update an existing      The revised record is
                           expense.                saved.
 
-  8\. Delete Expense      Confirm deletion of an  The record is removed
+  8. Delete Expense      Confirm deletion of an  The record is removed
                           existing expense.       and the data file is
                                                   updated.
 
-  9\. Budget Summary      Enter a month with      The correct
+  9. Budget Summary      Enter a month with      The correct
                           saved income and        allocations, spending
                           expenses.               totals, and remaining
                                                   balances are displayed.
 
-  10\. Data Persistence   Save, close, and reopen Previously saved
+  10. Data Persistence   Save, close, and reopen Previously saved
                           the application.        expenses and income are
                                                   loaded.
-
+  ```
   -----------------------------------------------------------------------
-
-Testing results should include the actual observed program output. Do
-not report a test as passed until it has been executed and verified.
-
-------------------------------------------------------------------------
+  
 ### 🔍 Static Analysis (Cppcheck)
 
 **Tool:** Cppcheck 2.22.0
@@ -803,7 +805,7 @@ The analysis completed with the following findings:
 
 Cppcheck successfully analyzed `main.cpp` and identified opportunities to improve code readability and make better use of C++ Standard Library algorithms. The findings are style recommendations and do not indicate confirmed functional errors.
 
-
+------------------------------------------------------------------------
 ### 🐞 Debugger – GDB & VS Code
 
 **Debugger:** GNU GDB 17.2
@@ -815,7 +817,6 @@ GNU GDB was configured with Visual Studio Code to debug the Personal Expense Tra
 ### **Debugging Evidence:**
 
 ![Successful GDB Debugging](debugger-success.png)
-
 
 ------------------------------------------------------------------------
 
